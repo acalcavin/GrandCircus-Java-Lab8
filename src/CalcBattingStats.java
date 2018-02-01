@@ -19,11 +19,13 @@ public class CalcBattingStats {
 
 		System.out.println("Welcome to Batting Average Calculator!");
 
-		while (cont.equalsIgnoreCase("y")) { // as long as cont is y or Y, will exec. at least once
-			// your code should start here. For example:
+		while (cont.equalsIgnoreCase("y")) { // as long as cont is y or Y, will continue
 
-			System.out.println("Enter number of times at bat: ");
-			int atBat = scan.nextInt();
+			int atBat = ValidatorForStats.getInt(scan, "Enter number of times at bat: "); // use method to validate
+																							// input
+			// System.out.println("You entered " + atBat); // TEST CODE
+
+			// int atBat = scan.nextInt();
 			int[] batter = new int[atBat]; // declare an array within while loop, to reset for each batter
 
 			System.out.println("0=out, 1=single, 2=double, 3=triple, 4=home run");
@@ -31,45 +33,48 @@ public class CalcBattingStats {
 			int i = 0;
 			for (i = 0; i < batter.length; i++) { // populate array with user input
 				System.out.println("Result for at-bat " + i + ":");
-
-				batter[i] = scan.nextInt();
+				int temp = scan.nextInt();
+				while ((temp < 0) || (temp > 4)) {
+					System.out.println("Please enter an number 0-4.");
+					temp = scan.nextInt();
+				}
+				batter[i] = temp;
 			}
-			// System.out.println(Arrays.toString(batter)); // test
+			// FIXME: add a method using ValidatorForStats that will validate input between 0-4
+			// and populate the array.
+			// pass in scan, array, range, return an array? 
+			// ValidatorForStats.getIntInRange(scan, batter, 0, 4);
 
-			// calculate hits, where index of batter > 0
+			// calculate hits, where index of batter > 0; calculate sum of bases earned
 			int hits = 0;
+			int sum = 0;
+
 			for (int j = 0; j < batter.length; j++) {
 				if (batter[j] > 0) {
 					hits++;
 				}
+				sum += batter[j];
 			}
-			// System.out.println(hits);
 
-			// calculate batting average, total num of at-bats where player got on base, div
-			// by at-bats
+			// calculate batting average: total num of at-bats where player got on base
+			// divide by at-bats
 			float battingAve = (float) hits / atBat;
-			// System.out.println(battingAve);
 			BigDecimal bigDbatAve = new BigDecimal(battingAve).setScale(3, RoundingMode.HALF_UP);
 			System.out.println("\nBatting average: " + bigDbatAve);
 
-			// calculate total number of bases earned
-			int sum = 0;
-			for (int k = 0; k < batter.length; k++) {
-				sum += batter[k]; 
+			// calculate slugging percentage: total number of bases earned
+			// divided by number of at-bats
 
-			}
-			float slugPercentage = (float)sum / atBat;
+			float slugPercentage = (float) sum / atBat;
 			BigDecimal bigDslugPerc = new BigDecimal(slugPercentage).setScale(3, RoundingMode.HALF_UP);
 			System.out.println("Slugging percentage: " + bigDslugPerc);
 
 			scan.nextLine();
-			// This is where your code should end.
 			System.out.println("\nAnother batter? (y/n)");
 			cont = scan.nextLine();
 
 		} // end of while
 
-		// let the user know the program has closed
 		System.out.println("Goodbye!");
 
 		scan.close();
